@@ -6,26 +6,35 @@
   <title>Pomodoro Timer</title>
   <style>
     body {
-      background-color: #0d3b0d; /* Vert foncé */
-      color: #b9fbc1; /* Vert clair */
+      background-color: #0d3b0d; /* Fond vert foncé */
+      color: #b9fbc1; /* Texte vert clair */
       font-family: 'Arial', sans-serif;
       display: flex;
-      justify-content: center;
-      align-items: center;
+      flex-direction: column;
+      justify-content: left;
+      align-items: left;
       height: 100vh;
-      margin: 0;
+      margin: 20px;
     }
 
-    .timer-container {
-      text-align: center;
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
     }
 
     .timer {
       font-size: 5rem;
       font-weight: bold;
-      margin: 0;
+      margin: 0 0 0 4%;
     }
 
+    .info {
+      margin: 10px 0;
+      font-size: 1.2rem;
+    }
+    .text-info{
+        justify-content: flex-start;
+    }
     .controls button {
       background-color: #1b5e20; /* Vert */
       border: none;
@@ -44,8 +53,13 @@
   </style>
 </head>
 <body>
+  <h1>Méthode Pomodoro, on travail ensemble</h1>
+<div class="text-info">
+  <p class="info"><b>Cycle actuel :</b> <span id="cycle">Travail</span></p>
+  <p class="info"><b>Boucles complétées : </b><span id="completed">0</span></p>
+</div>
   <div class="timer-container">
-    <h1 class="timer">25:00</h1>
+    <h1 class="timer" id="timer">25:00</h1>
     <div class="controls">
       <button onclick="startTimer()">Start</button>
       <button onclick="pauseTimer()">Pause</button>
@@ -54,11 +68,19 @@
   </div>
 
   <script>
-    let timerDuration = 25 * 60; // 25 minutes in seconds
-    let timeLeft = timerDuration;
+    let workDuration = 25 * 60; // Temps de travail en secondes
+    let shortBreakDuration = 5 * 60; // Pause courte
+    let longBreakDuration = 15 * 60; // Pause longue
+    let cyclesCompleted = 0; // Compteur des cycles terminés
+
+    let timeLeft = workDuration; // Temps restant (démarre en mode travail)
+    let isWorking = true; // Indique si on est en mode travail
     let timerInterval = null;
 
-    const timerElement = document.querySelector('.timer');
+    // Éléments DOM
+    const timerElement = document.getElementById('timer');
+    const cycleElement = document.getElementById('cycle');
+    const completedElement = document.getElementById('completed');
 
     function updateTimerDisplay() {
       const minutes = Math.floor(timeLeft / 60);
@@ -66,8 +88,25 @@
       timerElement.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     }
 
+    function switchCycle() {
+      if (isWorking) {
+        // Passe en pause
+        isWorking = false;
+        timeLeft = (cyclesCompleted % 4 === 0) ? longBreakDuration : shortBreakDuration; // Pause longue toutes les 4 boucles
+        cycleElement.textContent = 'Pause';
+      } else {
+        // Passe en travail
+        isWorking = true;
+        timeLeft = workDuration;
+        cyclesCompleted++;
+        completedElement.textContent = cyclesCompleted; // Met à jour le compteur de cycles
+        cycleElement.textContent = 'Travail';
+      }
+      updateTimerDisplay();
+    }
+
     function startTimer() {
-      if (timerInterval) return; // Prevent multiple intervals
+      if (timerInterval) return; // Évite plusieurs intervalles
       timerInterval = setInterval(() => {
         if (timeLeft > 0) {
           timeLeft--;
@@ -75,7 +114,8 @@
         } else {
           clearInterval(timerInterval);
           timerInterval = null;
-          alert('Pomodoro terminé !');
+          switchCycle(); // Change de cycle automatiquement
+          startTimer(); // Reprend automatiquement le prochain cycle
         }
       }, 1000);
     }
@@ -87,11 +127,15 @@
 
     function resetTimer() {
       pauseTimer();
-      timeLeft = timerDuration;
+      isWorking = true;
+      timeLeft = workDuration;
+      cyclesCompleted = 0;
+      completedElement.textContent = cyclesCompleted;
+      cycleElement.textContent = 'Travail';
       updateTimerDisplay();
     }
 
-    updateTimerDisplay(); // Initialize display
+    updateTimerDisplay(); // Initialise l'affichage
   </script>
 </body>
 </html>
