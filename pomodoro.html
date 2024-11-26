@@ -11,55 +11,73 @@
       font-family: 'Arial', sans-serif;
       display: flex;
       flex-direction: column;
-      justify-content: left;
-      align-items: left;
+      justify-content: center;
+      align-items: center;
       height: 100vh;
-      margin: 20px;
+      margin: 0;
     }
 
-    h1 {
-      font-size: 3rem;
-      margin-bottom: 20px;
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 50px; /* Espacement entre les éléments */
+      margin-top: 20px;
+    }
+
+    .info {
+      text-align: right;
+      font-size: 1.2rem;
     }
 
     .timer {
       font-size: 5rem;
       font-weight: bold;
-      margin: 0 0 0 4%;
+      text-align: center;
+      margin: 0;
     }
 
-    .info {
-      margin: 10px 0;
-      font-size: 1.2rem;
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
-    .text-info{
-        justify-content: flex-start;
-    }
+
     .controls button {
       background-color: #1b5e20; /* Vert */
       border: none;
       color: white;
       padding: 10px 20px;
-      font-size: 1.2rem;
+      font-size: 1rem;
       border-radius: 5px;
       cursor: pointer;
-      margin: 5px;
       transition: background-color 0.3s;
     }
 
     .controls button:hover {
       background-color: #43a047; /* Vert clair */
     }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
-  <h1>Méthode Pomodoro, on travail ensemble</h1>
-<div class="text-info">
-  <p class="info"><b>Cycle actuel :</b> <span id="cycle">Travail</span></p>
-  <p class="info"><b>Boucles complétées : </b><span id="completed">0</span></p>
-</div>
-  <div class="timer-container">
-    <h1 class="timer" id="timer">25:00</h1>
+  <h1>Pomodoro Timer</h1>
+
+  <div class="container">
+    <!-- Bloc des infos -->
+    <div class="info">
+      <p>Cycle actuel : <span id="cycle">Travail</span></p>
+      <p>Boucles complétées : <span id="completed">0</span></p>
+    </div>
+
+    <!-- Bloc du timer -->
+    <div class="timer" id="timer">25:00</div>
+
+    <!-- Bloc des contrôles -->
     <div class="controls">
       <button onclick="startTimer()">Start</button>
       <button onclick="pauseTimer()">Pause</button>
